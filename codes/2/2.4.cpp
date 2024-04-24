@@ -19,7 +19,7 @@ long long accu(const vector<int> &v)
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    long long result = accumulate(v.begin(), v.end(), 1ll * 0);
+    long long result = accumulate(v.begin(), v.end(), 0ll);
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = duration_cast<std::chrono::milliseconds>(stop - start);
@@ -48,7 +48,7 @@ long long concurrent_accu(const vector<int> &v)
                     auto ed = v.begin() + interval * (id + 1);
                     if (id == num_threads - 1)
                         ed = v.end();
-                    result[id] = accumulate(st, ed, 1ll * 0);
+                    result[id] = accumulate(st, ed, 0ll);
 //                    result[id] = id;
                 }, i
         );
@@ -61,7 +61,7 @@ long long concurrent_accu(const vector<int> &v)
 
     cout << "Concurrent accumulate time: " << duration.count() << "ms" << endl;
 
-    return std::accumulate(result.begin(), result.end(), 1ll * 0);
+    return std::accumulate(result.begin(), result.end(), 0ll);
 }
 
 int main()
