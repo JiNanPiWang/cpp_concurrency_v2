@@ -13,7 +13,7 @@
 using namespace std;
 
 const int N = 1e8;
-const auto num_threads = 8;
+const auto num_threads = thread::hardware_concurrency();
 
 long long accu(const vector<int> &v)
 {
