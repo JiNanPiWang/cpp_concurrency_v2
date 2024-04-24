@@ -42,7 +42,7 @@ long long concurrent_accu(const vector<int> &v)
         threads.emplace_back(
                 // result 应该是以引用方式捕获，如果不以引用方式捕获，每个线程将会得到 result 的一个拷贝，而不是操作同一个共享的容器。
                 // 全局变量在程序的任何部分都是可见的
-                [&result, interval, v](int id)
+                [&result, interval, &v](int id)
                 {
                     auto st = v.begin() + interval * id;
                     auto ed = v.begin() + interval * (id + 1);
