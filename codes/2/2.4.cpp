@@ -13,7 +13,7 @@
 using namespace std;
 
 const int N = 1e8;
-const auto num_threads = thread::hardware_concurrency();
+const auto num_threads = thread::hardware_concurrency() - 1;
 
 long long accu(const vector<int> &v)
 {
@@ -25,7 +25,7 @@ long long accu(const vector<int> &v)
     auto duration = duration_cast<std::chrono::milliseconds>(stop - start);
 
     cout << "Accumulate time: " << duration.count() << "ms" << endl;
-
+stack
     return result;
 }
 
