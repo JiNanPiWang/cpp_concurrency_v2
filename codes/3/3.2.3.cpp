@@ -1,7 +1,7 @@
 //
 // Created by Samsara on 2024/4/25.
-// File name: 3.cpp
-// Description: 
+// File name: 3.2.cpp
+// Description: 简单并发栈，main没有分割任务，不要把n设大了！！！！！
 //
 #include <iostream>
 #include <stack>
@@ -45,7 +45,7 @@ public:
 
 int main()
 {
-    int n = 100;
+    int n = 4; // 看上面的Description
     safe_stack<int> sk;
     vector<thread> v;
     for (int i = 0; i < n; ++i)
