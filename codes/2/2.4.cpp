@@ -25,7 +25,7 @@ long long accu(const vector<int> &v)
     auto duration = duration_cast<std::chrono::milliseconds>(stop - start);
 
     cout << "Accumulate time: " << duration.count() << "ms" << endl;
-stack
+
     return result;
 }
 
