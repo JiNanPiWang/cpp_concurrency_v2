@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.2)
 project(cpp_concurrency_v2)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -11,7 +11,8 @@ add_executable(cpp_concurrency_v2
 #        codes/3/3.3.1.cpp
 #        codes/3/3.3.2.cpp
 #        codes/4/4.1.1.cpp
-        codes/4/4.1.2.cpp
+#        codes/4/4.1.2.cpp
+        codes/4/4.2.1.cpp
 )
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
