@@ -15,7 +15,8 @@ add_executable(cpp_concurrency_v2
 #        codes/4/4.2.1.cpp
 #        codes/4/4.2.2.cpp
 #        codes/4/4.2.3.cpp
-        codes/4/4.2.4.cpp
+#        codes/4/4.2.4.cpp
+        codes/4/4.2.5.cpp
 )
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
