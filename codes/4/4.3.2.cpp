@@ -35,8 +35,32 @@ int main()
     std::future<void> f_deferred = std::async(std::launch::deferred, []() {});
     // wait_for()用来等待异步任务的完成，可以观看1ms和1000ms的区别
     // cout << (f_async.wait_for(1000ms) == std::future_status::ready) << endl;
-    cout << (f_async.wait_for(100ms) == std::future_status::ready) << endl;
-    cout << (f_deferred.wait_for(1ns) == std::future_status::ready) << endl;
+
+    switch (f_async.wait_for(1000ms))
+    {
+        case std::future_status::ready:
+            cout << "f_async ready" << endl;
+            break;
+        case std::future_status::timeout:
+            cout << "f_async timeout" << endl;
+            break;
+        case std::future_status::deferred:
+            cout << "f_async deferred" << endl;
+            break;
+    }
+
+    switch (f_deferred.wait_for(1ns))
+    {
+        case std::future_status::ready:
+            cout << "f_deferred ready" << endl;
+            break;
+        case std::future_status::timeout:
+            cout << "f_deferred timeout" << endl;
+            break;
+        case std::future_status::deferred:
+            cout << "f_deferred deferred" << endl;
+            break;
+    }
 
     return 0;
 }
