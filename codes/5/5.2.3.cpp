@@ -53,5 +53,10 @@ int main()
     cout << c.load() << endl;
     cout << d.load() << endl;
 
+    auto exchange = c.exchange(false, std::memory_order_relaxed);
+    // exchange()函数会返回c之前的值，所以exchange的值是1
+    cout << "exchange: " << exchange << endl;
+    cout << "After exchange: " << c.load() << endl;
+
     return 0;
 }
