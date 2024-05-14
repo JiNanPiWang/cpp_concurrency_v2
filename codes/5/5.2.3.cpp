@@ -40,5 +40,18 @@ int main()
 
     cout << z.load() << endl;
 
+    std::atomic<bool> c, d;
+    bool expected = false;
+    // compare_exchange_weak()和compare_exchange_strong()的区别在于，compare_exchange_weak()可能会失败，而compare_exchange_strong()不会
+    // compare_exchange_weak()和compare_exchange_strong()的第一个参数是期望值，第二个参数是要设置的值，
+    // 第三个参数是成功时的内存序，第四个参数是失败时的内存序
+    // 比如下面的代码，c和d的值都是false，所以compare_exchange_weak()和compare_exchange_strong()都会将c和d的值设置为true
+    // 第一个内存徐代表成功时前面的操作都要完成
+    c.compare_exchange_weak(expected, true, std::memory_order_release, std::memory_order_relaxed);
+    d.compare_exchange_strong(expected, true, std::memory_order_release, std::memory_order_relaxed);
+
+    cout << c.load() << endl;
+    cout << d.load() << endl;
+
     return 0;
 }
