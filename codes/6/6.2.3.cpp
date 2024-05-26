@@ -1,7 +1,7 @@
 //
 // Created by Samsara on 2024/5/23.
 // File name: 6.cpp
-// Description: 
+// Description: 自己实现的，和书上的不一样
 //
 #include <iostream>
 #include <memory>
