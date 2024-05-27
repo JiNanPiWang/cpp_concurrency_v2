@@ -22,21 +22,26 @@ private:
     };
 
     std::unique_ptr<node> head;  // 1
-    node* tail = nullptr;  // 2
+    node *tail = nullptr;  // 2
 
 public:
     queue() = default;
-    queue(const queue& other)=delete;
-    queue& operator=(const queue& other)=delete;
+
+    queue(const queue &other) = delete;
+
+    queue &operator=(const queue &other) = delete;
+
     std::shared_ptr<T> try_pop()
     {
-        if(head == nullptr)
+        if (head == nullptr)
         {
             return std::shared_ptr<T>();
         }
         std::shared_ptr<T> const res(std::make_shared<T>(std::move(head->data)));
-        std::unique_ptr<node> const old_head=std::move(head);
-        head=std::move(old_head->next);  // 3
+        std::unique_ptr<node> const old_head = std::move(head);
+        head = std::move(old_head->next);  // 3
+        if (head == nullptr)
+            tail = nullptr;
         return res;
     }
 
@@ -44,16 +49,16 @@ public:
     {
         // 新建节点
         std::unique_ptr<node> p(new node(std::move(new_value)));
-        node* const new_tail=p.get();
-        if(tail != nullptr) // 如果队列已经有元素
+        node *const new_tail = p.get();
+        if (tail != nullptr) // 如果队列已经有元素
         {
-            tail->next=std::move(p);  // 4
+            tail->next = std::move(p);  // 4
         }
         else // 如果队列没元素
         {
-            head=std::move(p);  // 5
+            head = std::move(p);  // 5
         }
-        tail=new_tail;  // 6
+        tail = new_tail;  // 6
     }
 };
 
