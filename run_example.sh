@@ -12,7 +12,6 @@ cmake ..
 # 使用make编译项目
 make
 
-# 参数：键的数量；键的分布类型（0表示已排序，1表示密集随机，2表示稀疏）；线程数
 ./cpp_concurrency_v2
 
 rm * -rf
