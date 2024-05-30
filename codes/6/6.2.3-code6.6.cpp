@@ -7,6 +7,7 @@
 #include <memory>
 #include <cassert>
 #include <thread>
+#include <vector>
 #include <mutex>
 
 using namespace std;
@@ -80,31 +81,37 @@ public:
 
 int main()
 {
-    threadsafe_queue<int> queue;
+    threadsafe_queue<int> q;
 
-    // 测试push函数
-    cout << "Pushing elements into the queue." << endl;
-    for(int i = 0; i < 10; ++i)
-    {
-        queue.push(i);
-    }
-
-    // 测试empty函数
-    cout << "Is queue empty? " << (queue.empty() ? "Yes" : "No") << endl;
-
-    // 测试try_pop函数
-    cout << "Popping elements from the queue:" << endl;
-    for(int i = 0; i < 10; ++i)
-    {
-        shared_ptr<int> value = queue.try_pop();
-        if(value != nullptr)
-        {
-            cout << *value << ",";
+    // Function to push elements into the queue in a thread-safe manner
+    auto push_function = [&q](int start, int end) {
+        for (int i = start; i <= end; ++i) {
+            q.push(i);
+            cout << "Pushed: " << i << endl;
         }
+    };
+
+    // Create a vector to hold threads
+    vector<thread> threads;
+
+    // Define the number of threads
+    const int num_threads = 5;
+
+    // Define the range of numbers to be pushed by each thread
+    const int per_thread_count = 20;
+
+    // Start threads
+    for (int i = 0; i < num_threads; ++i) {
+        threads.emplace_back(push_function, i * per_thread_count + 1, (i + 1) * per_thread_count);
     }
 
-    // 检查队列是否为空
-    cout << "\nIs queue empty? " << (queue.empty() ? "Yes" : "No") << endl;
+    // Join threads
+    for (auto &t : threads) {
+        t.join();
+    }
+
+    // Check if the queue is empty
+    cout << "Queue empty: " << (q.empty() ? "Yes" : "No") << endl;
 
     return 0;
 }
