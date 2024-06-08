@@ -34,12 +34,9 @@ private:
         return tail;
     }
 
+    // for wait_for_data, no detect for empty queue
     unique_ptr<node> pop_head()
     {
-        if (head.get() == get_tail())
-        {
-            return nullptr;
-        }
         auto old_head = std::move(head); // 能够提供更好的保护，因为它保留了旧的头节点，可以在异常处理代码中恢复状态。
         head = std::move(old_head->next);
         return old_head;
@@ -97,10 +94,7 @@ public:
     shared_ptr<T> wait_and_pop()
     {
         auto old_head = wait_pop_head();
-        if (old_head == nullptr)
-            return nullptr;
-        else
-            return old_head->data; // nullptr？不用，因为空的时候会wait
+        return old_head->data; // nullptr？不用，因为空的时候会wait
     }
 
     void wait_and_pop(T &value)
@@ -157,7 +151,7 @@ int main()
 
     auto pop_thread = thread([&tsq]()
                              {
-                                 this_thread::sleep_for(chrono::milliseconds (500)); // 等待2秒以模拟工作
+                                 this_thread::sleep_for(chrono::milliseconds(500)); // 等待2秒以模拟工作
                                  auto item = tsq.wait_and_pop();
                                  cout << "Wait and popped: " << *item << endl;
                              });
