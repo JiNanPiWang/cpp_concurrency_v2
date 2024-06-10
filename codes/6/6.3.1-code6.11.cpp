@@ -9,6 +9,9 @@
 #include <shared_mutex>
 #include <list>
 #include <algorithm>
+#include <vector>
+#include <cassert>
+
 
 using namespace std;
 
@@ -62,29 +65,64 @@ private:
         }
     };
 
+    vector<unique_ptr<basic_bucket>> buckets;
+
+    auto &get_bucket(const key_type &key) // 返回bucket的引用
+    {
+        const auto &bucket_idx = hash_type()(key) % buckets.size();
+        return *buckets[bucket_idx];
+    }
+
 public:
-    // For testing purposes, expose basic_bucket
-    basic_bucket bucket;
+    threadsafe_lookup_table(threadsafe_lookup_table const &other) = delete;
+
+    threadsafe_lookup_table &operator=(threadsafe_lookup_table const &other) = delete;
+
+    explicit threadsafe_lookup_table(int num_buckets = 19) : buckets(num_buckets)
+    {
+        for (int i = 0; i < num_buckets; ++i)
+        {
+            buckets[i] = make_unique<basic_bucket>();
+        }
+    }
+
+    value_type value_for(const key_type &key, const value_type &default_value)
+    {
+        return get_bucket(key).value_for(key, default_value);
+    }
+
+    void add_or_update_mapping(const key_type &key, const value_type &value)
+    {
+        return get_bucket(key).add_or_update_mapping(key, value);
+    }
+
+    void remove_mapping(const key_type &key)
+    {
+        return get_bucket(key).remove_mapping(key);
+    }
 };
 
 int main()
 {
+    // 创建一个 threadsafe_lookup_table 对象
     threadsafe_lookup_table<int, std::string> table;
 
-    // Add or update mappings
-    table.bucket.add_or_update_mapping(1, "One");
-    table.bucket.add_or_update_mapping(2, "Two");
-    table.bucket.add_or_update_mapping(3, "Three");
+    // 测试 value_for() 函数
+    table.add_or_update_mapping(1, "one");
+    assert(table.value_for(1, "default") == "one"); // 1 存在于表中，返回 "one"
+    assert(table.value_for(2, "default") == "default"); // 2 不在表中，返回 "default"
 
-    // Retrieve values
-    std::cout << "Key 1: " << table.bucket.value_for(1, "Not Found") << std::endl;
-    std::cout << "Key 2: " << table.bucket.value_for(2, "Not Found") << std::endl;
-    std::cout << "Key 3: " << table.bucket.value_for(3, "Not Found") << std::endl;
-    std::cout << "Key 4: " << table.bucket.value_for(4, "Not Found") << std::endl;
+    // 测试 add_or_update_mapping() 函数
+    table.add_or_update_mapping(2, "two");
+    assert(table.value_for(2, "default") == "two"); // 2 存在于表中，返回 "two"
 
-    // Remove a mapping
-    table.bucket.remove_mapping(2);
-    std::cout << "Key 2 after removal: " << table.bucket.value_for(2, "Not Found") << std::endl;
+    // 测试 remove_mapping() 函数
+    table.remove_mapping(2);
+    assert(table.value_for(2, "default") == "default"); // 2 已被删除，返回 "default"
+
+    // 添加更多的测试用例...
+
+    std::cout << "All tests passed successfully!" << std::endl;
 
     return 0;
 }
