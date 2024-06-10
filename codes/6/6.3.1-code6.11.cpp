@@ -66,10 +66,11 @@ private:
     };
 
     vector<unique_ptr<basic_bucket>> buckets;
+    hash_type hasher;
 
     auto &get_bucket(const key_type &key) // 返回bucket的引用
     {
-        const auto &bucket_idx = hash_type()(key) % buckets.size();
+        const auto &bucket_idx = hasher(key) % buckets.size();
         return *buckets[bucket_idx];
     }
 
@@ -78,7 +79,8 @@ public:
 
     threadsafe_lookup_table &operator=(threadsafe_lookup_table const &other) = delete;
 
-    explicit threadsafe_lookup_table(int num_buckets = 19) : buckets(num_buckets)
+    explicit threadsafe_lookup_table(int num_buckets = 19, hash_type _hasher = hash_type())
+                                    : buckets(num_buckets), hasher(_hasher)
     {
         for (int i = 0; i < num_buckets; ++i)
         {
